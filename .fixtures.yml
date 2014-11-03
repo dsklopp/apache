@@ -1,0 +1,7 @@
+fixtures:
+  symlinks:
+    apache: "#{source_dir}"
+  forge_modules:
+    stdlib:
+      repo: "puppetlabs/stdlib"
+      ref: "3.2.2"
