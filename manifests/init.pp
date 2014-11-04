@@ -10,22 +10,12 @@ class apache (
   $user         = $::apache::params::user,
   $version      = 'installed',
 ) inherits ::apache::params {
-  package { $package:
-    ensure => $version,
-    before => File[$config_file],
-  }
 
-  file { $config_file:
-    ensure  => 'file',
-    content => template("apache/apache.conf.erb"),
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0444',
-    notify  => Service[$service],
-  }
+  include ::apache::install
+  include ::apache::config
+  include ::apache::service
 
-  service { $service:
-    ensure => 'running',
-    enable => true,
-  }
+  Class['::apache::install'] ->
+  Class['::apache::config'] ~>
+  Class['::apache::service']
 }
