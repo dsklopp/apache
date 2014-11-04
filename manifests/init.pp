@@ -9,7 +9,7 @@ class apache {
     owner  => 'root',
     group  => 'root',
     mode   => '0444',
-    source => '/home/student/apache/examples/httpd.conf',
+    source => 'puppet:///modules/apache/httpd.conf',
     notify => Service['httpd'],
   }
 
