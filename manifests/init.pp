@@ -5,12 +5,12 @@ class apache {
   }
 
   file { '/etc/httpd/conf/httpd.conf':
-    ensure => 'file',
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0444',
-    source => 'puppet:///modules/apache/httpd.conf',
-    notify => Service['httpd'],
+    ensure  => 'file',
+    content => template('apache/httpd.conf.erb'),
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0444',
+    notify  => Service['httpd'],
   }
 
   service { 'httpd':
