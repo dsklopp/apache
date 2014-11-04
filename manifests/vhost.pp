@@ -11,7 +11,5 @@ define apache::vhost (
     group   => 'root',
     owner   => 'root',
     mode    => '0444',
-    require => Package['httpd'],
-    notify  => Service['httpd'],
   }
 }

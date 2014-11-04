@@ -3,21 +3,37 @@ class apache (
   $servername = $::fqdn,
   $version    = 'installed',
 ) {
-  package { 'httpd':
-    ensure => $version,
-    before => File['/etc/httpd/conf/httpd.conf'],
+  case $::osfamily {
+    'RedHat': {
+      $config_file  = '/etc/httpd/conf/httpd.conf'
+      $package      = 'httpd'
+      $service      = 'httpd'
+    }
+    'Debian': {
+      $config_file  = '/etc/apache2/apache2.conf'
+      $package      = 'apache2'
+      $service      = 'apache2'
+    }
+    default: {
+      fail("${::osfamily} isn't supported by ${module_name}")
+    }
   }
 
-  file { '/etc/httpd/conf/httpd.conf':
+  package { $package:
+    ensure => $version,
+    before => File[$config_file],
+  }
+
+  file { $config_file:
     ensure  => 'file',
-    content => template('apache/httpd.conf.erb'),
+    content => template("apache/apache.conf.${::osfamily}.erb"),
     owner   => 'root',
     group   => 'root',
     mode    => '0444',
-    notify  => Service['httpd'],
+    notify  => Service[$service],
   }
 
-  service { 'httpd':
+  service { $service:
     ensure => 'running',
     enable => true,
   }
