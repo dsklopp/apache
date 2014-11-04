@@ -1,0 +1,30 @@
+ServerName <%= @servername %>
+Listen <%= @listen %>
+
+User <%= @user %>
+Group <%= @group %>
+
+<%- case @osfamily -%>
+<%- when 'RedHat' then -%>
+LoadModule dir_module modules/mod_dir.so
+LoadModule mime_module modules/mod_mime.so
+LoadModule autoindex_module modules/mod_autoindex.so
+<%- when 'Debian' then -%>
+Include mods-enabled/*.load
+Include mods-enabled/*.conf
+<%- end -%>
+
+TypesConfig /etc/mime.types
+DirectoryIndex index.html
+Options +Indexes
+
+DocumentRoot "<%= @documentroot %>"
+
+ErrorLog "<%= @errorlog %>"
+LogLevel warn
+
+Include conf.d/*.conf
+
+<%- if @osfamily == 'Debian' %>
+Include sites-enabled/
+<%- end %>
