@@ -6,6 +6,35 @@ define apache::vhost (
   $servername     = $title,
 ) {
 
+  # ensure must be present or absent
+  unless member(['present', 'absent'], $ensure) {
+    fail("${module_name} ${title}: ensure ${servername} must be 'present' or 'absent'")
+  }
+
+  # If defined, documentroot must be an absolute path
+  if $documentroot {
+    validate_absolute_path($documentroot)
+  }
+
+  # Port must be defined and numeric`
+  unless is_numeric($port) {
+    fail("${module_name} ${title}: port ${port} must be an integer")
+  }
+
+  # Port must be between 0 and 65534
+  unless $port >= 0 and $port <= 65534 {
+    fail("${module_name} ${title}: port ${port} is not a port between 0 and 65534")
+  }
+
+  # If defined, errorlog must be an absolute path
+  if $errorlog {
+    validate_absolute_path($errorlog)
+  }
+
+  # servername must match apache's specifications
+  # http://httpd.apache.org/docs/2.2/mod/core.html#servername
+  validate_re($servername, '^([a-z]+:\/\/)?[\w\-\.]+(:[\d]+)?$')
+
   $vhost_dir = $::osfamily ? {
     'RedHat' => '/etc/httpd/conf.d',
     'Debian' => '/etc/apache2/sites-available',
