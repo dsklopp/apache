@@ -1,9 +1,10 @@
-class apache {
-  $listen     = 80
-  $servername = $::fqdn
-
+class apache (
+  $listen     = 80,
+  $servername = $::fqdn,
+  $version    = 'installed',
+) {
   package { 'httpd':
-    ensure => 'installed',
+    ensure => $version,
     before => File['/etc/httpd/conf/httpd.conf'],
   }
 
