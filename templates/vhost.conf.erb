@@ -1,0 +1,12 @@
+Listen <%= @port %>
+<VirtualHost *:<%= @port %>>
+    ServerName <%= @servername %>
+
+    <%- if @documentroot -%>
+    DocumentRoot <%= @documentroot %>
+    <%- end -%>
+
+    <%- if @errorlog -%>
+    ErrorLog "<%= @errorlog %>
+    <%- end -%>
+</VirtualHost>
