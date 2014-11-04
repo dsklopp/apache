@@ -1,11 +1,11 @@
-class apache::vhost (
+define apache::vhost (
   $ensure         = 'present',
   $documentroot   = undef,
   $errorlog       = undef,
   $port           = 80,
-  $servername     = $fqdn,
+  $servername     = $title,
 ) {
-  file { "/etc/httpd/conf.d/${servername}.conf":
+  file { "/etc/httpd/conf.d/${title}.conf":
     ensure  => $ensure,
     content => template('apache/vhost.conf.erb'),
     group   => 'root',
