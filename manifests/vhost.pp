@@ -31,4 +31,8 @@ define apache::vhost (
       target => "../sites-available/${title}.conf",
     }
   }
+
+  Class['::apache::install'] ->
+  Apache::Vhost[$title] ~>
+  Class['::apache::service']
 }
