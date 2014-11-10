@@ -1,4 +1,7 @@
 class apache {
+  $listen     = 80
+  $servername = $::fqdn
+
   package { 'httpd':
     ensure => 'installed',
     before => File['/etc/httpd/conf/httpd.conf'],
