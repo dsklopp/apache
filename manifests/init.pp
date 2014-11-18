@@ -1,16 +1,18 @@
 class apache {
+  $listen     = 80
+  $servername = $::fqdn
   package { 'httpd':
     ensure => 'installed',
     before => File['/etc/httpd/conf/httpd.conf'],
   }
 
   file { '/etc/httpd/conf/httpd.conf':
-    ensure => 'file',
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0444',
-    source => '/home/student/apache/examples/httpd.conf',
-    notify => Service['httpd'],
+    ensure  => 'file',
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0444',
+    content => template('apache/httpd.conf.erb'),
+    notify  => Service['httpd'],
   }
 
   service { 'httpd':
